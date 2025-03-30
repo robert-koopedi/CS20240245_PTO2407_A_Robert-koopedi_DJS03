@@ -4,6 +4,20 @@ let page = 1;
 let matches = books
 
 /**
+ * Creates an HTML element with specified attributes and inner HTML.
+ * @param {string} tag - The HTML tag name.
+ * @param {Object} attributes - Key-value pairs of attributes.
+ * @param {string} innerHTML - The inner HTML content.
+ * @returns {HTMLElement} - The created element.
+ */
+function createElement(tag, attributes = {}, innerHTML = '') {
+    const element = document.createElement(tag);
+    Object.entries(attributes).forEach(([key, value]) => element.setAttribute(key, value));
+    element.innerHTML = innerHTML;
+    return element;
+}
+
+/**
  * Renders book previews based on the provided book list.
  * @param {Array} bookList - List of book objects to display.
  * @param {HTMLElement} container - The container to render books into.
