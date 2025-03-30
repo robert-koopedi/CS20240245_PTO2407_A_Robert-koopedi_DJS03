@@ -28,9 +28,27 @@ The "Book Connect" project provides an opportunity for students to refine a full
 
 After completing the tasks, prepare a brief presentation for your coaching group on the following:
 - The rationale behind the refactoring decisions made, including the choice of objects and functions.
+ 1. Objective 
+ * Improve maintainability, readability, and extensibility.
+
+ 2. Decisions:
+* Objects and Functions: Used objects to structure book data (e.g., authors, genres) and created reusable functions to simplify tasks (e.g., rendering books, applying themes).
+* Modularization: Focused on breaking down the code into smaller, self-contained functions to handle specific tasks and avoid code duplication.
+
 - How abstraction has made the code more maintainable and extendable.
+* Maintainability: Code is easier to update and maintain due to modular functions.
+* Extendability: Adding new features (e.g., filters) is easier without affecting existing logic.
+
 - Any challenges faced during the refactoring process and how they were overcome.
+1. Challenges:
+* Ensuring functionality after refactoring and maintaining simplicity while abstracting logic.
+* Managing DOM updates efficiently.
+2. Solutions:
+* Testing: Verified features worked as expected post-refactor.
+
 - Reflections on how this exercise has deepened your understanding of JavaScript programming concepts.
+* Abstraction and Modularization make code more organized, readable, and testable.
+* DOM Optimization Techniques: Using document.createDocumentFragment() to reduce reflows and improve performance.
 
 #### Submission Guidelines
 
