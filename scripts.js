@@ -3,27 +3,42 @@ import { books, authors, genres, BOOKS_PER_PAGE } from './data.js'
 let page = 1;
 let matches = books
 
-const starting = document.createDocumentFragment()
+/**
+ * Renders book previews based on the provided book list.
+ * @param {Array} bookList - List of book objects to display.
+ * @param {HTMLElement} container - The container to render books into.
+ */
+function renderBooks(bookList, container) {
+    // Clear any existing content in the container
+    container.innerHTML = '';
+    
+    // Create a document fragment for efficient DOM manipulation
+    const fragment = document.createDocumentFragment();
+    
+    // Loop through the books and render them
+    bookList.slice(0, BOOKS_PER_PAGE).forEach(({author, id, image, title}) => {
+        // Create the book element with necessary attributes and content
+        const bookElement = document.createElement('button');
+        bookElement.classList.add('preview');
+        bookElement.setAttribute('data-preview', id);
 
-for (const { author, id, image, title } of matches.slice(0, BOOKS_PER_PAGE)) {
-    const element = document.createElement('button')
-    element.classList = 'preview'
-    element.setAttribute('data-preview', id)
+        // Set the inner HTML for the book preview
+        bookElement.innerHTML = `
+            <img class="preview__image" src="${image}" alt="Book cover" />
+            <div class="preview__info">
+                <h3 class="preview__title">${title}</h3>
+                <div class="preview__author">${author}</div>
+            </div>
+        `;
 
-    element.innerHTML = `
-        <img
-            class="preview__image"
-            src="${image}"
-        />
-        
-        <div class="preview__info">
-            <h3 class="preview__title">${title}</h3>
-            <div class="preview__author">${authors[author]}</div>
-        </div>
-    `
+        // Append the book element to the fragment
+        fragment.appendChild(bookElement);
+    });
 
-    starting.appendChild(element)
+    // Append the fragment to the container to render all books
+    container.appendChild(fragment);
 }
+
 
 document.querySelector('[data-list-items]').appendChild(starting)
 
@@ -56,7 +71,7 @@ for (const [id, name] of Object.entries(authors)) {
 }
 
 document.querySelector('[data-search-authors]').appendChild(authorsHtml)
-
+ //Theme handling(Dark and Light)
 if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
     document.querySelector('[data-settings-theme]').value = 'night'
     document.documentElement.style.setProperty('--color-dark', '255, 255, 255');
