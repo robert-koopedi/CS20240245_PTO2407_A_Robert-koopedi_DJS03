@@ -84,14 +84,22 @@ function applyTheme(theme) {
     localStorage.setItem('theme', theme);
 }
 
+/**
+ * Updates the "Show More" button based on remaining books.
+ */
+function updateShowMoreButton() {
+    const remaining = Math.max(matches.length - page * BOOKS_PER_PAGE, 0);
+    const button = document.querySelector('[data-list-button]');
+    button.innerHTML = `<span>Show more</span> <span class="list__remaining">(${remaining})</span>`;
+    button.disabled = remaining === 0;
+}
 
-document.querySelector('[data-list-button]').innerText = `Show more (${books.length - BOOKS_PER_PAGE})`
-document.querySelector('[data-list-button]').disabled = (matches.length - (page * BOOKS_PER_PAGE)) > 0
-
-document.querySelector('[data-list-button]').innerHTML = `
-    <span>Show more</span>
-    <span class="list__remaining"> (${(matches.length - (page * BOOKS_PER_PAGE)) > 0 ? (matches.length - (page * BOOKS_PER_PAGE)) : 0})</span>
-`
+document.addEventListener('DOMContentLoaded', () => {
+    // Apply theme from localStorage on page load
+    const savedTheme = localStorage.getItem('theme') || 'day';
+    applyTheme(savedTheme);
+    updateShowMoreButton();
+});
 
 document.querySelector('[data-search-cancel]').addEventListener('click', () => {
     document.querySelector('[data-search-overlay]').open = false
