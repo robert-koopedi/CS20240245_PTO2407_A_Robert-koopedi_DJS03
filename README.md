@@ -45,6 +45,7 @@ After completing the tasks, prepare a brief presentation for your coaching group
 * Managing DOM updates efficiently.
 2. Solutions:
 * Testing: Verified features worked as expected post-refactor.
+* Incremental Refactoring: Made changes in small steps to ensure smooth transitions and functionality.
 
 - Reflections on how this exercise has deepened your understanding of JavaScript programming concepts.
 * Abstraction and Modularization make code more organized, readable, and testable.
