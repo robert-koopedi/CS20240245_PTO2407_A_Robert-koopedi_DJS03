@@ -30,9 +30,16 @@ function renderBooks(bookList, container) {
     const fragment = document.createDocumentFragment();
     
     // Loop through the books and render them
-    bookList.slice(0, BOOKS_PER_PAGE).forEach(({author, id, image, title}) => {
+    bookList.slice(0, BOOKS_PER_PAGE).forEach(book => {
+        fragment.appendChild(renderBookPreview(book));
+    });
+
+    container.appendChild(fragment);
+}
+
+function renderBookPreview({author, id, image, title}) {
         // Create the book element with necessary attributes and content
-        const bookElement = document.createElement('button');
+        const element = document.createElement('button');
         bookElement.classList.add('preview');
         bookElement.setAttribute('data-preview', id);
 
@@ -45,30 +52,26 @@ function renderBooks(bookList, container) {
             </div>
         `;
 
-        // Append the book element to the fragment
-        fragment.appendChild(bookElement);
-    });
-
-    // Append the fragment to the container to render all books
-    container.appendChild(fragment);
-}
+        return element;
+    }
 
 
-// document.querySelector('[data-list-items]').appendChild(starting)
-/**
- * Populates a select dropdown with options.
- * @param {HTMLElement} selectElement - The select dropdown element.
- * @param {Object} options - Key-value pairs for dropdown options.
- * @param {string} defaultText - The default option text.
- */
-function populateSelect(selectElement, options, defaultText) {
-    const fragment = document.createDocumentFragment();
-    fragment.appendChild(createElement('option', { value: 'any' }, defaultText));
-    Object.entries(options).forEach(([id, name]) => {
-        fragment.appendChild(createElement('option', { value: id }, name));
-    });
-    selectElement.replaceChildren(fragment);
-}
+
+// // document.querySelector('[data-list-items]').appendChild(starting)
+// /**
+//  * Populates a select dropdown with options.
+//  * @param {HTMLElement} selectElement - The select dropdown element.
+//  * @param {Object} options - Key-value pairs for dropdown options.
+//  * @param {string} defaultText - The default option text.
+//  */
+// function populateSelect(selectElement, options, defaultText) {
+//     const fragment = document.createDocumentFragment();
+//     fragment.appendChild(createElement('option', { value: 'any' }, defaultText));
+//     Object.entries(options).forEach(([id, name]) => {
+//         fragment.appendChild(createElement('option', { value: id }, name));
+//     });
+//     selectElement.replaceChildren(fragment);
+// }
 
 /**
  * Handles theme toggling between light and dark modes.
