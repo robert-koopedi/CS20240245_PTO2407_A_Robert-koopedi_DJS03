@@ -4,6 +4,14 @@ import './BookPreview.js';
 let page = 1;
 let matches = books
 
+
+const listItemsContainer = document.querySelector('[data-list-items]');
+const listButton = document.querySelector('[data-list-button]');
+const searchOverlay = document.querySelector('[data-search-overlay]');
+const searchForm = document.querySelector('[data-search-form]');
+const searchCancel = document.querySelector('[data-search-cancel]');
+
+
 /**
  * Creates an HTML element with specified attributes and inner HTML.
  * @param {string} tag - The HTML tag name.
@@ -19,20 +27,23 @@ function createElement(tag, attributes = {}, innerHTML = '') {
 }
 
 /**
- * Renders book previews based on the provided book list.
- * @param {Array} bookList - List of book objects to display.
- * @param {HTMLElement} container - The container to render books into.
+ * Renders a list of book previews into the given container.
+ * @param {Array} bookList - The list of books to render.
+ * @param {HTMLElement} container - The container element to render into.
+ * @param {number} page - The current page number.
+ * @param {boolean} append - Whether to append to existing content (default false).
  */
-function renderBooks(bookList, container) {
-    // Clear any existing content in the container
-    container.innerHTML = '';
-    
-    // Create a document fragment for efficient DOM manipulation
+function renderBooks(bookList, container, page = 1, append = false) {
+    if (!append) container.innerHTML = ''; // Clear if not appending
+
+    const start = (page - 1) * BOOKS_PER_PAGE;
+    const end = page * BOOKS_PER_PAGE;
+
     const fragment = document.createDocumentFragment();
-    
-    // Loop through the books and render them
-    bookList.slice(0, BOOKS_PER_PAGE).forEach(book => {
-        fragment.appendChild(renderBookPreview(book));
+
+    bookList.slice(start, end).forEach(book => {
+        const previewElement = renderBookPreview(book);
+        fragment.appendChild(previewElement);
     });
 
     container.appendChild(fragment);
@@ -91,6 +102,17 @@ function updateShowMoreButton() {
     button.disabled = remaining === 0;
 }
 
+function closeOverlay(selector) {
+    const overlay = document.querySelector(selector);
+    if (overlay) overlay.open = false;
+}
+
+function openOverlay(selector, focusSelector = null) {
+    const overlay = document.querySelector(selector);
+    if (overlay) overlay.open = true;
+    if (focusSelector) document.querySelector(focusSelector)?.focus();
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const savedTheme = localStorage.getItem('theme') || 'day';
     applyTheme(savedTheme);
@@ -129,6 +151,43 @@ function handleThemeSubmit(event) {
     applyTheme(theme);
     document.querySelector('[data-settings-overlay]').open = false;
 }
+
+function handleSearchSubmit(event) {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const filters = Object.fromEntries(formData);
+    const result = [];
+
+    for (const book of books) {
+        let genreMatch = filters.genre === 'any';
+
+        for (const singleGenre of book.genres) {
+            if (singleGenre === filters.genre) {
+                genreMatch = true;
+                break;
+            }
+        }
+
+        const titleMatch = filters.title.trim() === '' || book.title.toLowerCase().includes(filters.title.toLowerCase());
+        const authorMatch = filters.author === 'any' || book.author === filters.author;
+
+        if (titleMatch && authorMatch && genreMatch) {
+            result.push(book);
+        }
+    }
+
+    page = 1;
+    matches = result;
+
+    document.querySelector('[data-list-message]').classList.toggle('list__message_show', result.length < 1);
+
+    renderBooks(result, listItemsContainer);
+    updateShowMoreButton();
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    document.querySelector('[data-search-overlay]').open = false;
+}
+
 
 document.querySelector('[data-settings-form]').addEventListener('submit', handleThemeSubmit);
 
@@ -173,16 +232,7 @@ document.querySelector('[data-search-form]').addEventListener('submit', (event) 
         newItems.appendChild(element);
     }
 
-    function closeOverlay(selector) {
-        const overlay = document.querySelector(selector);
-        if (overlay) overlay.open = false;
-    }
     
-    function openOverlay(selector, focusSelector = null) {
-        const overlay = document.querySelector(selector);
-        if (overlay) overlay.open = true;
-        if (focusSelector) document.querySelector(focusSelector)?.focus();
-    }
     
     
 
