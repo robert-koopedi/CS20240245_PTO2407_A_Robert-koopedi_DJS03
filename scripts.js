@@ -122,21 +122,16 @@ document.querySelector('[data-list-close]').addEventListener('click', () => {
     document.querySelector('[data-list-active]').open = false
 })
 
-document.querySelector('[data-settings-form]').addEventListener('submit', (event) => {
-    event.preventDefault()
-    const formData = new FormData(event.target)
-    const { theme } = Object.fromEntries(formData)
+function handleThemeSubmit(event) {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const { theme } = Object.fromEntries(formData);
+    applyTheme(theme);
+    document.querySelector('[data-settings-overlay]').open = false;
+}
 
-    if (theme === 'night') {
-        document.documentElement.style.setProperty('--color-dark', '255, 255, 255');
-        document.documentElement.style.setProperty('--color-light', '10, 10, 20');
-    } else {
-        document.documentElement.style.setProperty('--color-dark', '10, 10, 20');
-        document.documentElement.style.setProperty('--color-light', '255, 255, 255');
-    }
-    
-    document.querySelector('[data-settings-overlay]').open = false
-})
+document.querySelector('[data-settings-form]').addEventListener('submit', handleThemeSubmit);
+
 
 document.querySelector('[data-search-form]').addEventListener('submit', (event) => {
     event.preventDefault()
@@ -177,6 +172,18 @@ document.querySelector('[data-search-form]').addEventListener('submit', (event) 
         const element = renderBookPreview(book);
         newItems.appendChild(element);
     }
+
+    function closeOverlay(selector) {
+        const overlay = document.querySelector(selector);
+        if (overlay) overlay.open = false;
+    }
+    
+    function openOverlay(selector, focusSelector = null) {
+        const overlay = document.querySelector(selector);
+        if (overlay) overlay.open = true;
+        if (focusSelector) document.querySelector(focusSelector)?.focus();
+    }
+    
     
 
     document.querySelector('[data-list-items]').appendChild(newItems)
