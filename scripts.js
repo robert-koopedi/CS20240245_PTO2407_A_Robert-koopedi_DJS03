@@ -40,9 +40,11 @@ function renderBooks(bookList, container) {
 
 function renderBookPreview({author, id, image, title}) {
         // Create the book element with necessary attributes and content
-        const element = document.createElement('button');
-        bookElement.classList.add('preview');
-        bookElement.setAttribute('data-preview', id);
+        const element = document.createElement('book-preview');
+        element.setAttribute('data-id', id);
+        bookElement.setAttribute('data-title', title);
+        element.setAttribute('data-author', authors[author]);
+        
 
         // Set the inner HTML for the book preview
         bookElement.innerHTML = `
